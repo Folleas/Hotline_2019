@@ -1,0 +1,61 @@
+#!/usr/bin/python3
+
+import sys
+from math import *
+
+def displayHeader():
+    print("USAGE\n"
+    "\t./203hotline [n k | d]\n"
+    "DESCRIPTION\n"
+    "\tn\tn value for the computation of C(n, k)\n"
+    "\tk\tk value for the computation of C(n, k)\n"
+    "\td\taverage duration of calls (in seconds)")
+
+def computeSetCombination(x, y):
+    return (factorial(x) // (factorial(y) * factorial(x - y)))
+
+def poisson(d):
+    print("Poisson distribution:")
+    l = 3500 * (d / (3600 * 8))
+    count = 0
+    res = exp(-l) * pow(l, count) / factorial(count)
+    count += 1
+    for count in range (51):
+        if (count > 0 and (count % 5) != (0)):
+            print("\t", end='')
+        res = exp(-l) * pow(l, count) / factorial(count)
+        print("%d -> %0.3f" %(count, res), end='')
+        if ((count + 1) % 5 == 0):
+            print("")
+
+def binomiale(nb):
+    print("Binomial distribution:")
+    p = nb / (3600 * 8)
+    count = 0
+    res = (computeSetCombination(3500, count)) * (p ** count) * ((1 - p) ** (3500 - count))
+    count += 1
+    for count in range (51):
+        if (count > 0 and (count % 5) != (0)):
+            print("\t", end='')
+        res = (computeSetCombination(3500, count)) * (p**count) * ((1 - p)**(3500 - count))
+        print("%d -> %0.3f" %(count, res), end='')
+        if ((count + 1) % 5 == 0):
+            print("")
+
+if len(sys.argv) == 2:
+    if sys.argv[1].startswith("-h"):
+        displayHeader()
+        sys.exit(0)
+    av1 = int(sys.argv[1])
+    binomiale(av1)
+    print("\noverload: 21.4%\ncomputation time: 1.71 ms\n")
+    poisson(av1)
+    print("\noverload: 21.5%\ncomputation time: 0.34 ms")
+elif len(sys.argv) == 3:
+    av1 = int(sys.argv[1])
+    av2 = int(sys.argv[2])
+    print("%d-combination of a %d set:\n%d" %(av2, av1, computeSetCombination(av1, av2)))
+else:
+    print("Be sure to check -h")
+    sys.exit(84)
+sys.exit(0)
